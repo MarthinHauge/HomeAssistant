@@ -24,7 +24,7 @@
         friendly_name: "strømpris kwh inkl nettleie"
         unit_of_measurement: "kr"
         icon_template: "mdi:cash-multiple"
-        value_template: "{{(((states('sensor.nordpool_kwh_krsand_nok_4_10_025')|float)) + (states('sensor.Nettleie')| float))}}"
+        value_template: "{{(((states('sensor.nordpool_kwh_krsand_nok_3_10_025')|float)) + (states('sensor.Nettleie')| float))}}"
 
       stromkostnad_idag:
         value_template: "{{ (state_attr('sensor.real_time_consumption_Your_address_here', 'accumulatedConsumption') | float * states('sensor.strompris_kwh_inkl_nettleie')| float) | round(3) }}"
