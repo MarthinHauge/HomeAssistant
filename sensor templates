@@ -1,0 +1,552 @@
+- platform: template
+   sensors: 
+
+
+      total_accumulated_kwh_today:
+        friendly_name: "Total accumulated kWh today"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ float(state_attr('sensor.real_time_consumption_Your_address_here', 'accumulatedConsumption')) | round(2) }}"
+
+
+      stromkostnad_igar:
+        friendly_name: "stromkostnad i går"
+        unit_of_measurement: 'Kr'
+        value_template: "{{ state_attr('sensor.daily_stromkostnad_hagalia', 'last_period') }}"
+
+
+      nettleie:
+       value_template: "0.4174"
+       friendly_name: "nettleie_kun_verdi"
+       unit_of_measurement: "kr"
+
+
+      strompris_kwh_inkl_nettleie:
+        friendly_name: "strømpris kwh inkl nettleie"
+        unit_of_measurement: "kr"
+        icon_template: "mdi:cash-multiple"
+        value_template: "{{(((states('sensor.nordpool_kwh_krsand_nok_4_10_025')|float)) + (states('sensor.Nettleie')| float))}}"
+
+      stromkostnad_idag:
+        value_template: "{{ (state_attr('sensor.real_time_consumption_Your_address_here', 'accumulatedConsumption') | float * states('sensor.strompris_kwh_inkl_nettleie')| float) | round(3) }}"
+        friendly_name: "Strømkostnad i dag inkl nettleie"
+        unit_of_measurement: "kr"
+
+      stromkostnad_minute:
+        value_template: "{{ (states('sensor.real_time_consumption_Your_address_here')| float / 1000  | float * states('sensor.strompris_kwh_inkl_nettleie')| float) | round(3) }}"
+        friendly_name: "Strømkostnad minutte"
+        unit_of_measurement: "kr"
+
+
+      stromkostnad_forrige_mnd:
+        value_template: "{{ (state_attr('sensor.monthly_stromkostnad_hagalia' , 'last_period')) }}"
+        friendly_name: "Strømkostnad forrige mnd inkl nettleie"
+        unit_of_measurement: "kr"
+
+      stromforbruk_forrige_mnd:
+        value_template: "{{ (state_attr('sensor.monthly_energy_consumption_hus' , 'last_period')) }}"
+        friendly_name: "Stromforbruk forrige mnd"
+        unit_of_measurement: "kWh"
+
+      climate_maja:
+        friendly_name: "watt maja rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.maja', 'consumption_today') }}"
+
+      climate_vilja:
+        friendly_name: "watt vilja rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.vilja', 'consumption_today') }}"
+
+      climate_suite:
+        friendly_name: "watt suite rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.suite', 'consumption_today') }}"
+
+      climate_maja_total_this_year:
+        friendly_name: "watt maja rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.maja', 'consumption_total') }}"
+
+      climate_vilja_total_this_year:
+        friendly_name: "watt vilja rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.vilja', 'consumption_total') }}"
+
+      climate_suite_total_this_year:
+        friendly_name: "watt suite rom"
+        unit_of_measurement: 'kWh'
+        value_template: "{{ state_attr('climate.suite', 'consumption_total') }}"
+
+
+      fan_fan_temp:
+        friendly_name: "luftrenser"
+        unit_of_measurement: 'Grader'
+        value_template: "{{ state_attr('fan.fan', 'temperature') }}"
+
+      fan_fan_humidity:
+        friendly_name: "luftrenser"
+        unit_of_measurement: 'Prosent'
+        value_template: "{{ state_attr('fan.fan', 'humidity') }}"
+
+
+
+      vacuum_cleanmainbrush:
+        friendly_name: Replace main brush
+        unit_of_measurement: 'h'
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'In: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.main_brush_left }}'
+        icon_template: 'mdi:screwdriver'
+
+      vacuum_cleansidebrush:
+        friendly_name: Replace side brush
+        unit_of_measurement: 'h'
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'In: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.side_brush_left }}'
+        icon_template: 'mdi:screwdriver'
+
+      vacuum_cleanfilter:
+        friendly_name: Replace filter
+        unit_of_measurement: 'h'
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'In: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.filter_left }}'
+        icon_template: 'mdi:screwdriver'
+
+      vacuum_sensordirtyleft:
+        friendly_name: Clean filters in
+        unit_of_measurement: 'h'
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'In: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.sensor_dirty_left }}'
+        icon_template: 'mdi:screwdriver'
+
+      vacuum_battery:
+        friendly_name: Vacuum Battery
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'Battery: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_level }}'
+        unit_of_measurement: '%'
+        icon_template: '{{ states.vacuum.xiaomi_vacuum_cleaner.attributes.battery_icon }}'
+
+      vacuum_cleaning_count:
+        friendly_name: Vacuum total cleanups
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'cleaned: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.cleaning_count }}'
+        unit_of_measurement: 'Times'
+        icon_template: 'mdi:broom'
+
+      vacuum_total_cleaned_area:
+        friendly_name: Vacuum total cleaned area
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'Area: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.total_cleaned_area }}'
+        unit_of_measurement: 'm2'
+        icon_template: 'mdi:broom'
+
+
+      vacuum_total_cleaning_time:
+        friendly_name: Vacuum total cleaning time
+        entity_id:
+          - vacuum.xiaomi_vacuum_cleaner
+        value_template: 'Time: {{ states.vacuum.xiaomi_vacuum_cleaner.attributes.total_cleaning_time }}'
+        unit_of_measurement: 'h'
+        icon_template: 'mdi:broom'
+
+
+
+
+
+
+      nordpool_now_inkl_nettleie:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "nordpool_now_inkl_nettleie.today"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{  states('sensor.nordpool_kwh_krsand_nok_3_10_025') | float + states('sensor.Nettleie') | float }}"
+
+
+
+
+
+
+
+      nordpool_today_hr_00_01:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 1"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[0]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_01_02:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 2"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[1] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_02_03:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 3"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[2] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_03_04:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 4"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[3] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_04_05:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 5"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[4]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_05_06:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 6"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[5] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_06_07:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 7"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[6] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_07_08:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 8"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[7]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_08_09:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 9"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[8]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_09_10:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 10"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[9]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_10_11:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 11"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[10]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_11_12:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 12"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[11]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_12_13:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 13"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[12] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_13_14:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 14"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[13] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_14_15:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 15"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[14]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_15_16:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 16"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[15] + (states('sensor.Nettleie')| float)  }}"
+
+
+      nordpool_today_hr_16_17:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 17"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[16]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_17_18:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 18"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[17] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_18_19:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 19"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[18]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_19_20:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 20"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[19]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_20_21:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 21"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[20]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_21_22:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 22"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[21] + (states('sensor.Nettleie')| float)  }}"
+
+      nordpool_today_hr_22_23:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 23"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[22]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_today_hr_23_24:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Today hour 24"
+        icon_template: mdi:cash
+        unit_of_measurement: "Kr kWh"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.today[23]  + (states('sensor.Nettleie')| float) }}"
+
+      nordpool_tomorrow_hr_00_01:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 1"
+        icon_template: mdi:cash
+        unit_of_measurement: "01:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[0] }}"
+
+      nordpool_tomorrow_hr_01_02:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 2"
+        icon_template: mdi:cash
+        unit_of_measurement: "02:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[1] }}"
+
+      nordpool_tomorrow_hr_02_03:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 3"
+        icon_template: mdi:cash
+        unit_of_measurement: "03:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[2] }}"
+
+      nordpool_tomorrow_hr_03_04:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 4"
+        icon_template: mdi:cash
+        unit_of_measurement: "04:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[3] }}"
+
+      nordpool_tomorrow_hr_04_05:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 5"
+        icon_template: mdi:cash
+        unit_of_measurement: "05:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[4] }}"
+
+      nordpool_tomorrow_hr_05_06:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 6"
+        icon_template: mdi:cash
+        unit_of_measurement: "06:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[5] }}"
+
+      nordpool_tomorrow_hr_06_07:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 7"
+        icon_template: mdi:cash
+        unit_of_measurement: "07:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[6] }}"
+
+      nordpool_tomorrow_hr_07_08:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 8"
+        icon_template: mdi:cash
+        unit_of_measurement: "08:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[7] }}"
+
+      nordpool_tomorrow_hr_08_09:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 9"
+        icon_template: mdi:cash
+        unit_of_measurement: "09:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[8] }}"
+
+      nordpool_tomorrow_hr_09_10:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 10"
+        icon_template: mdi:cash
+        unit_of_measurement: "10:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[9] }}"
+
+      nordpool_tomorrow_hr_10_11:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 11"
+        icon_template: mdi:cash
+        unit_of_measurement: "11:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[10] }}"
+
+      nordpool_tomorrow_hr_11_12:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 12"
+        icon_template: mdi:cash
+        unit_of_measurement: "12:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[11] }}"
+
+      nordpool_tomorrow_hr_12_13:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 13"
+        icon_template: mdi:cash
+        unit_of_measurement: "12:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[12] }}"
+
+      nordpool_tomorrow_hr_13_14:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 14"
+        icon_template: mdi:cash
+        unit_of_measurement: "13:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[13] }}"
+
+      nordpool_tomorrow_hr_14_15:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 15"
+        icon_template: mdi:cash
+        unit_of_measurement: "14:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[14] }}"
+
+      nordpool_tomorrow_hr_15_16:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 16"
+        icon_template: mdi:cash
+        unit_of_measurement: "15:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[15] }}"
+
+      nordpool_tomorrow_hr_16_17:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 17"
+        icon_template: mdi:cash
+        unit_of_measurement: "16:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[16] }}"
+
+      nordpool_tomorrow_hr_17_18:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 18"
+        icon_template: mdi:cash
+        unit_of_measurement: "17:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[17] }}"
+
+      nordpool_tomorrow_hr_18_19:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 19"
+        icon_template: mdi:cash
+        unit_of_measurement: "18:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[18] }}"
+
+      nordpool_tomorrow_hr_19_20:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 20"
+        icon_template: mdi:cash
+        unit_of_measurement: "19:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[19] }}"
+
+      nordpool_tomorrow_hr_20_21:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 21"
+        icon_template: mdi:cash
+        unit_of_measurement: "20:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[20] }}"
+
+      nordpool_tomorrow_hr_21_22:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 22"
+        icon_template: mdi:cash
+        unit_of_measurement: "21:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[21] }}"
+
+      nordpool_tomorrow_hr_22_23:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 23"
+        icon_template: mdi:cash
+        unit_of_measurement: "22:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[22] }}"
+
+      nordpool_tomorrow_hr_23_24:
+        entity_id: sensor.nordpool_kwh_krsand_nok_3_10_025
+        friendly_name: "Tomorrow hour 24"
+        icon_template: mdi:cash
+        unit_of_measurement: "23:00"
+        value_template: "{{ states.sensor.nordpool_kwh_krsand_nok_3_10_025.attributes.tomorrow[23] }}"
+
+
+
+      tibber_currentphase1:
+        friendly_name: "Strømforbruk Fase 1"
+        unit_of_measurement: 'A'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'currentL1') }}"
+        
+      
+      tibber_currentphase3:
+        friendly_name: "Strømforbruk Fase 3"
+        unit_of_measurement: 'A'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'currentL3') }}"
+        
+      tibber_averagepoweruse:
+        friendly_name: "Gjennomsnitt Strømforbruk i dag"
+        unit_of_measurement: 'W'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'averagePower') }}"
+
+      tibber_totalusage:
+        friendly_name: "Totalt Strømforbruk"
+        unit_of_measurement: 'Kwh'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'lastMeterConsumption') }}"
+        
+
+      tibber_minpower:
+        friendly_name: "Laveste strømforbruk i dag"
+        unit_of_measurement: 'W'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'minPower') }}"
+      
+
+      tibber_highpower:
+        friendly_name: "Høyeste strømforbruk i dag"
+        unit_of_measurement: 'W'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'maxPower') }}"
+        
+
+      tibber_forbruk_idag:
+        friendly_name: "Forbruk i dag"
+        unit_of_measurement: 'kwh'
+        value_template: "{{ state_attr('sensor.real_time_consumption_Your_address_here', 'accumulatedConsumption') }}"  
