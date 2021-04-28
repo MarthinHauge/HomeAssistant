@@ -1,0 +1,27 @@
+utility_meter:
+  daily_energy_consumption_varmepumpe:
+    source: sensor.hagalia_energy
+    cycle: daily 
+
+
+  monthly_energy_consumption_hus:
+    source: sensor.tibber_forbruk_idag
+    cycle: monthly
+
+
+  monthly_stromkostnad_hagalia:
+    source: sensor.stromkostnad_idag
+    cycle: monthly
+
+  hourly_stromkostnad_hagalia:
+    source: sensor.stromkostnad_idag
+    cycle: hourly 
+
+  daily_stromkostnad_hagalia:
+    source: sensor.stromkostnad_idag
+    cycle: daily
+
+  hourly_stromforbruk1:
+    source: sensor.total_accumulated_kwh_today
+    cycle: hourly
+  
