@@ -1,0 +1,466 @@
+title: Home
+views:
+  - path: default_view
+    title: Hjem
+    resources:
+      - url: >-
+          -/local/custom_lovelace/xiaomi_vacuum_map_card/xiaomi-vacuum-map-card.js
+        type: module
+    panel: false
+    icon: ''
+    badges: []
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: 'custom:simple-thermostat'
+            entity: climate.hagalia
+            name: Varmepumpe
+            hide:
+              temperature: true
+            control:
+              _names: false
+            decimals: '1'
+            step_size: '1'
+            sensors:
+              - entity: sensor.daily_energy_consumption_varmepumpe
+                name: Strømforbruk i dag
+          - type: 'custom:simple-thermostat'
+            entity: climate.maja
+            hide:
+              temperature: true
+            control:
+              _names: false
+              _icon: false
+            sensors:
+              - entity: sensor.temperature_7
+                name: Romtemperatur
+              - entity: sensor.humidity_8
+                name: Luftfuktighet
+              - entity: sensor.climate_maja
+                name: Strømforbruk i dag
+            show_header: true
+            step_size: '1'
+          - type: 'custom:simple-thermostat'
+            entity: climate.vilja
+            hide:
+              temperature: true
+            control:
+              _names: false
+              _icon: false
+            sensors:
+              - entity: sensor.temperature_10
+                name: Romtemperatur
+              - entity: sensor.humidity_11
+                name: Luftfuktighet
+              - entity: sensor.climate_vilja
+                name: Strømforbruk i dag
+            step_size: '1'
+          - type: 'custom:simple-thermostat'
+            entity: climate.suite
+            hide:
+              temperature: true
+            control:
+              _names: false
+              _icon: false
+            sensors:
+              - entity: sensor.climate_suite
+                name: Strømforbruk i dag
+            step_size: '1'
+            step_layout: column
+          - type: button
+            tap_action:
+              action: toggle
+            entity: switch.avfukter
+            show_state: true
+      - type: vertical-stack
+        cards:
+          - type: gauge
+            entity: sensor.real_time_consumption_your_address_here
+            min: 0
+            max: 10000
+            severity:
+              green: 0
+              yellow: 3000
+              red: 5000
+          - type: picture-entity
+            entity: camera.ringeklokke
+            camera_image: camera.ringeklokke
+            show_state: false
+            show_name: false
+            camera_view: live
+          - type: entity
+            entity: sensor.temperature_2
+          - type: entity
+            entity: sensor.humidity_4
+          - type: entity
+            entity: sensor.fan_fan_temp
+            name: Temperatur vaskerom
+          - type: entity
+            entity: sensor.fan_fan_humidity
+            name: Luftfuktighet vaskerom
+          - type: entities
+            entities:
+              - entity: sensor.restavfall
+              - entity: sensor.papir
+              - entity: sensor.matavfall
+              - entity: sensor.plastemballasje
+              - entity: sensor.glass_metallemballasje
+            title: Neste søppeltømming
+            state_color: false
+            show_header_toggle: true
+          - type: entity
+            entity: sensor.stromkostnad_igar
+          - type: entity
+            entity: sensor.monthly_stromkostnad_hagalia
+            name: Strømkostnad denne mnd
+          - type: entity
+            entity: sensor.monthly_energy_consumption_hus
+            name: Strømforbruk denne mnd
+          - type: entity
+            entity: sensor.stromkostnad_forrige_mnd
+          - type: entity
+            entity: sensor.stromforbruk_forrige_mnd
+          - type: entity
+            entity: sensor.db_size
+      - type: vertical-stack
+        cards:
+          - type: 'custom:apexcharts-card'
+            update_interval: 4 min
+            experimental:
+              color_threshold: true
+            graph_span: 1d
+            cache: false
+            span:
+              start: day
+            header:
+              show: true
+              title: Kostnad / forbruk pr time
+            series:
+              - entity: sensor.hourly_stromforbruk1
+                type: column
+                name: Forbruk time
+                extend_to_end: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 3
+                    color: orange
+                  - value: 5
+                    color: red
+                group_by:
+                  duration: 60 min
+                  func: max
+              - entity: sensor.hourly_stromkostnad_hagalia
+                type: line
+                name: Pris time
+                stroke_width: 1
+                extend_to_end: false
+                color_threshold:
+                  - value: 0
+                    color: green
+                  - value: 4
+                    color: orange
+                  - value: 5
+                    color: red
+                group_by:
+                  duration: 60 min
+                  func: max
+          - type: 'custom:mini-graph-card'
+            color_thresholds:
+              - value: 0
+                color: green
+              - value: 1
+                color: orange
+              - value: 1.5
+                color: red
+            entities:
+              - entity: sensor.nordpool_now_inkl_nettleie
+                show_graph: false
+                show_state: true
+                state_adaptive_color: true
+              - entity: sensor.nordpool_today_hr_00_01
+                name: Today hour 1
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_01_02
+                name: Today hour 2
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_02_03
+                name: Today hour 3
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_03_04
+                name: Today hour 4
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_04_05
+                name: Today hour 5
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_05_06
+                name: Today hour 6
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_06_07
+                name: Today hour 7
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_07_08
+                name: Today hour 8
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_08_09
+                name: Today hour 9
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_09_10
+                name: Today hour 10
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_10_11
+                name: Today hour 11
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_11_12
+                name: Today hour 12
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_12_13
+                name: Today hour 13
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_13_14
+                name: Today hour 14
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_14_15
+                name: Today hour 15
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_15_16
+                name: Today hour 16
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_16_17
+                name: Today hour 17
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_17_18
+                name: Today hour 18
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_18_19
+                name: Today hour 19
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_19_20
+                name: Today hour 20
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_20_21
+                name: Today hour 21
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_21_22
+                name: Today hour 22
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_22_23
+                name: Today hour 23
+                show_legend: false
+              - entity: sensor.nordpool_today_hr_23_24
+                name: Today hour 24
+                show_legend: false
+            name: Strømpriser i dag inkl nettleie
+            group_by: hour
+            hours_to_show: 1
+            hour24: true
+            height: 100
+            icon: 'mdi:cash-multiple'
+            show:
+              graph: bar
+              labels: false
+          - type: 'custom:mini-graph-card'
+            entities:
+              - entity: sensor.tibber_forbruk_idag
+                name: Strømforbruk og kostnad i dag
+              - entity: sensor.stromkostnad_idag
+                name: Kostnad
+                show_state: true
+                show_graph: false
+            hours_to_show: 168
+            icon: 'mdi:flash'
+            min_bound_range: 0
+            height: 90
+            lower_bound: 0
+            upper_bound: 150
+            color_thresholds:
+              - value: 0
+                color: green
+              - value: 50
+                color: orange
+              - value: 100
+                color: red
+            bar_spacing: 20
+            aggregate_func: max
+            group_by: date
+            show:
+              graph: bar
+              legend: false
+          - type: entities
+            entities:
+              - entity: switch.avfukter
+              - entity: switch.varmeovn_kjeller
+              - entity: sensor.temperature_2
+                name: Temperatur kjeller
+              - entity: sensor.fan_fan_temp
+                icon: 'hass:thermometer'
+                name: Temperatur vaskerom
+              - entity: sensor.hagalia_room_temperature
+                name: 'Temperatur ved varmepumpe '
+              - entity: sensor.fan_fan_humidity
+                icon: 'hass:water-percent'
+                name: Luftfuktighet vaskerom
+              - entity: sensor.humidity_8
+                name: Luftfuktighet Maja rom
+              - entity: sensor.humidity_11
+                name: Luftfuktighet Vilja rom
+              - entity: sensor.humidity_4
+                name: Luftfuktighet Kjeller
+            state_color: true
+          - type: entities
+            entities:
+              - entity: sensor.tibber_minpower
+                icon: 'hass:flash'
+              - entity: sensor.tibber_highpower
+                icon: 'hass:flash'
+              - entity: sensor.tibber_averagepoweruse
+                icon: 'hass:flash'
+            title: Strømforbruk i dag
+          - type: entities
+            entities:
+              - entity: sensor.tibber_totalusage
+                icon: 'hass:flash'
+              - entity: sensor.hagalia_energy
+                name: Varmepumpe totalt
+                icon: 'hass:flash'
+              - entity: sensor.climate_suite_total_this_year
+                name: Varmeovn master bedroom i år
+                icon: 'hass:flash'
+              - entity: sensor.climate_maja_total_this_year
+                name: Varmeovn Maja i år
+                icon: 'hass:flash'
+              - entity: sensor.climate_vilja_total_this_year
+                name: Varmeovn Vilja i år
+                icon: 'hass:flash'
+            title: Strømforbruk totalt
+  - icon: 'mdi:cctv'
+    badges: []
+    cards:
+      - type: picture-entity
+        entity: camera.inngangsdor
+        show_name: false
+        show_state: false
+        camera_view: live
+      - type: picture-entity
+        entity: camera.gaardsplass
+        camera_view: live
+        show_state: false
+        show_name: false
+      - type: picture-entity
+        entity: light.sov_gang
+        camera_image: camera.ringeklokke
+        camera_view: live
+        show_state: false
+        show_name: false
+  - title: Lys
+    path: lys
+    icon: ''
+    badges: []
+    cards:
+      - type: entities
+        entities:
+          - entity: light.vilja1
+          - entity: light.vilja2
+          - entity: light.vilja3
+        title: Vilja lys
+        state_color: true
+      - type: entities
+        entities:
+          - entity: light.tradfri_bulb
+          - entity: light.tradfri_bulb_2
+          - entity: light.tradfri_bulb_3
+        title: Maja lys
+        state_color: true
+        show_header_toggle: true
+      - type: entities
+        entities:
+          - entity: light.entre1
+          - entity: light.entre2
+          - entity: light.entre3
+        title: Entré lys
+        state_color: true
+      - type: entities
+        entities:
+          - entity: light.color_temperature_light_2
+          - entity: light.color_temperature_light_4
+        title: Soveromsgang lys
+        state_color: true
+      - type: entities
+        entities:
+          - entity: light.color_light_2
+          - entity: light.color_temperature_light_5
+          - entity: light.lyspaere_bod
+        title: Diverse lys
+        state_color: true
+      - type: entities
+        entities:
+          - entity: light.suite1
+          - entity: light.suite2
+          - entity: light.suite3
+        title: Master bedroom lys
+        state_color: true
+      - type: logbook
+        entities:
+          - binary_sensor.presence_5
+        hours_to_show: 24
+      - type: logbook
+        entities:
+          - binary_sensor.presence_14
+        hours_to_show: 24
+      - type: logbook
+        entities:
+          - binary_sensor.motion_sensor
+        hours_to_show: 24
+  - title: Støvsuger
+    path: ''
+    badges: []
+    cards:
+      - type: 'custom:xiaomi-vacuum-map-card'
+        entity: vacuum.xiaomi_vacuum
+        calibration_points: null
+        camera_calibration: true
+        camera_view: live
+        map_camera: camera.xiaomi_cloud_map_extractor
+      - type: 'custom:vacuum-card'
+        entity: vacuum.xiaomi_vacuum_cleaner
+        image: false
+        show_status: true
+        show_toolbar: true
+        show_name: true
+        compact_view: true
+      - type: entities
+        entities:
+          - entity: sensor.vacuum_cleanmainbrush
+          - entity: sensor.vacuum_cleansidebrush
+          - entity: sensor.vacuum_cleanfilter
+          - entity: sensor.vacuum_sensordirtyleft
+          - entity: sensor.vacuum_total_cleaning_time
+          - entity: sensor.vacuum_total_cleaned_area
+          - entity: sensor.vacuum_cleaning_count
+  - title: Batteri
+    path: batteri
+    icon: ''
+    badges: []
+    cards:
+      - type: sensor
+        entity: sensor.hauge_battery_level
+        graph: line
+      - type: sensor
+        entity: sensor.nure_battery_level
+        graph: line
+      - type: sensor
+        entity: sensor.sm_t500_battery_level
+        graph: line
+        name: Wallpanel
+      - type: entities
+        entities:
+          - entity: sensor.lightlevel_13_battery_level
+          - entity: sensor.tradfri_remote_control_2
+          - entity: sensor.tradfri_remote_control
+          - entity: sensor.presence_5_battery_level
+          - entity: sensor.multi_sensor_battery_level
+          - entity: sensor.motion_sensor_battery_level
+          - entity: sensor.multi_sensor_2_maja_battery_level
+          - entity: sensor.multi_sensor_3_vilja_battery_level
+          - entity: sensor.fjernkontroll_suite
+          - entity: sensor.fjernkontroll_bod
